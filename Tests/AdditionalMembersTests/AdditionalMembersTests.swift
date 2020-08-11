@@ -12,7 +12,7 @@ final class AdditionalMembersTests: XCTestCase {
         ("testCodingWithComplexStructure", testCodingWithComplexStructure)
     ]
     
-    func codeAdditionalMembers(with dict: [String:Any]) throws {
+    func codeAdditionalMembers(with dict: [String:Any], assertEquals: Bool = true) throws {
         
         let additionalMembers = AdditionalMembers<IncludingAllKeys>(json: dict)
         
@@ -24,7 +24,9 @@ final class AdditionalMembersTests: XCTestCase {
         
         let result = try decoder.decode(AdditionalMembers<IncludingAllKeys>.self, from: data)
         
-        XCTAssertEqual(additionalMembers, result, "Additional members did not decode to the same value.")
+        if assertEquals {
+            XCTAssertEqual(additionalMembers, result, "Additional members did not decode to the same value.")
+        }
     }
     
     func testCodingWithEmptyDict() throws {
@@ -96,5 +98,11 @@ final class AdditionalMembersTests: XCTestCase {
             "arrayDictArray": [["hey": ["you!"]]],
             "dictArrayDict": ["hey": [["you": "!"]]]
         ])
+    }
+    
+    func testCodingNil() throws {
+        //Make sure that coding a dictionary with null values does not crash
+        //Do not test equality as null values are not encoded, resulting in the decoded data missing that entry.
+        try codeAdditionalMembers(with: ["nullValue": NSNull()], assertEquals: false)
     }
 }

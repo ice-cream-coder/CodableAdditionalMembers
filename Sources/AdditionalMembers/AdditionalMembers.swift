@@ -3,7 +3,6 @@
 //  Additional Members
 //
 //  Created by Roy Dawson on 2/27/20.
-//  Copyright © 2020 Lucid Software. All rights reserved.
 //
 
 import Foundation
@@ -109,7 +108,7 @@ public struct AdditionalMembers<T: ExcludingKey>: Codable, Equatable {
                 case let dict as [String:Any]:
                     try encode(dictionary: dict, to: container.superEncoder(forKey: CodingKeys(key)))
                 default:
-                    throw NSError(domain: "failed to encoded json", code: 0, userInfo: nil)
+                    try container.encodeNil(forKey: CodingKeys(key))
                 }
             }
         }
@@ -135,7 +134,7 @@ public struct AdditionalMembers<T: ExcludingKey>: Codable, Equatable {
                 case let dict as [String:Any]:
                     try encode(dictionary: dict, to: container.superEncoder())
                 default:
-                    throw NSError(domain: "failed to encoded json", code: 0, userInfo: nil)
+                    try container.encodeNil()
                 }
             }
         }
